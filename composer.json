@@ -1,0 +1,7 @@
+{
+    "name": "jover/oauth-php",
+    "description": "Composer port of the OAuth-php library",
+    "type": "library",
+    "license": "MIT",
+    "require": {}
+}
