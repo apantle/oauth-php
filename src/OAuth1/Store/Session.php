@@ -2,6 +2,8 @@
 
 namespace OAuth1\Store;
 
+use OAuth1\OAuthException2;
+
 /**
  * OAuthSession is a really *dirty* storage. It's useful for testing and may
  * be enough for some very simple applications, but it's not recommended for

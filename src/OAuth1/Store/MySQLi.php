@@ -2,6 +2,8 @@
 
 namespace OAuth1\Store;
 
+use OAuth1\OAuthException2;
+
 /**
  * Storage container for the oauth credentials, both server and consumer side.
  * Based on MySQL

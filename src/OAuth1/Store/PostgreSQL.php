@@ -2,6 +2,8 @@
 
 namespace OAuth1\Store;
 
+use OAuth1\OAuthException2;
+
 /**
  * PostgreSQL.php
  *

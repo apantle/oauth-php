@@ -32,8 +32,6 @@
  * THE SOFTWARE.
  */
 
-require_once dirname(__FILE__) . '/OAuthException2.php';
-
 namespace OAuth1;
 
 class OAuthStore
@@ -47,7 +45,7 @@ class OAuthStore
     {
         if (!OAuthStore::$instance) {
             // Select the store you want to use
-            $class = '//OAuth1//Store//' . $store;
+            $class = '\\OAuth1\\Store\\' . $store;
 
             if (class_exists($class)) {
                 OAuthStore::$instance = new $class($options);
@@ -58,7 +56,6 @@ class OAuthStore
         return OAuthStore::$instance;
     }
 }
-
 
 /* vi:set ts=4 sts=4 sw=4 binary noeol: */
 

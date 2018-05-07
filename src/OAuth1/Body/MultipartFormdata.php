@@ -2,6 +2,8 @@
 
 namespace OAuth1\Body;
 
+use OAuth1\OAuthException2;
+
 /**
  * Create the body for a multipart/form-data message.
  * 

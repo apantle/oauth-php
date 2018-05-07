@@ -1,5 +1,7 @@
 <?php
 
+namespace OAuth1;
+
 /**
  * Simple exception wrapper for OAuth
  * 
@@ -33,10 +35,6 @@
 // TODO: something with the HTTP return code matching to the problem
 
 use Exception;
-
-require_once dirname(__FILE__) . '/OAuthRequestLogger.php';
-
-namespace OAuth1;
 
 class OAuthException2 extends Exception
 {

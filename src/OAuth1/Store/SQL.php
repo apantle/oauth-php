@@ -2,6 +2,8 @@
 
 namespace OAuth1\Store;
 
+use OAuth1\OAuthException2;
+
 /**
  * Storage container for the oauth credentials, both server and consumer side.
  * Based on MySQL
@@ -1817,7 +1819,7 @@ abstract class SQL extends StoreAbstract
 	abstract protected function sql_escape_string ( $s );
 	
 	
-	abstract protected function sql_errcheck ( $sql );
+	abstract protected function sql_errcheck ( $sql = null );
 }
 
 

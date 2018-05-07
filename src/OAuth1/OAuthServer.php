@@ -31,9 +31,6 @@
  * THE SOFTWARE.
  */
 
-require_once 'OAuthRequestVerifier.php';
-require_once 'OAuthSession.php';
-
 namespace OAuth1;
 
 class OAuthServer extends OAuthRequestVerifier

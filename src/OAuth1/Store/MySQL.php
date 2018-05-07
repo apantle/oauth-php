@@ -2,7 +2,7 @@
 
 namespace OAuth1\Store;
 
-use Exception;
+use OAuth1\OAuthException2;
 
 /**
  * Storage container for the oauth credentials, both server and consumer side.
@@ -49,7 +49,7 @@ class MySQL extends SQL
 	public function install ()
 	{
 	    // todo: check if this is used, otherwise remove
-	    throw new Exception('ewww, don\'t use this');
+	    throw new OAuthException2('ewww, don\'t use this');
 	}
 	
 	

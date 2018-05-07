@@ -40,7 +40,6 @@ class MD5 extends SignatureMethod
 		return 'MD5';
 	}
 
-
 	/**
 	 * Calculate the signature using MD5
 	 * Binary md5 digest, as distinct from PHP's built-in hexdigest.

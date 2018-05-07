@@ -2,6 +2,8 @@
 
 namespace OAuth1\Store;
 
+use OAuth1\OAuthException2;
+
 /**
  * OAuthStore implementation for 2 legged OAuth. This 'store' just saves the
  * consumer_token and consumer_secret.

@@ -2,6 +2,8 @@
 
 namespace OAuth1\Body;
 
+use OAuth1\OAuthException2;
+
 /**
  * Add the extra headers for a PUT or POST request with a file.
  * 

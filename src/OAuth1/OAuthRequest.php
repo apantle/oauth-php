@@ -30,9 +30,6 @@
  * THE SOFTWARE.
  */
 
-
-require_once dirname(__FILE__) . '/OAuthException2.php';
-
 namespace OAuth1;
 
 /**
@@ -256,7 +253,7 @@ class OAuthRequest
 			{
 				$m = strtoupper($m);
 				$m2 = preg_replace('/[^A-Z0-9]/', '_', $m);
-				if (file_exists(dirname(__FILE__).'/signature_method/OAuthSignatureMethod_'.$m2.'.php'))
+				if (class_exists('\\OAuth1\\SignatureMethod\\' . $m2))
 				{
 					$method = $m;
 					break;
