@@ -32,6 +32,8 @@
 
 // TODO: something with the HTTP return code matching to the problem
 
+use Exception;
+
 require_once dirname(__FILE__) . '/OAuthRequestLogger.php';
 
 namespace OAuth1;

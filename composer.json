@@ -3,5 +3,10 @@
     "description": "Composer port of the OAuth-php library",
     "type": "library",
     "license": "MIT",
-    "require": {}
+    "require": {},
+
+    "autoload": {
+        "psr-4": {"OAuth1\\": "src/"},
+        "files": ["helpers/xrds_parse.php"]
+    }
 }

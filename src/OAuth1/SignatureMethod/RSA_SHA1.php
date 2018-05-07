@@ -1,5 +1,7 @@
 <?php
 
+namespace OAuth1\SignatureMethod;
+
 /**
  * OAuth signature implementation using PLAINTEXT
  * 
@@ -30,10 +32,7 @@
  * THE SOFTWARE.
  */
 
-
-require_once dirname(__FILE__).'/OAuthSignatureMethod.class.php';
-
-class OAuthSignatureMethod_RSA_SHA1 extends OAuthSignatureMethod
+class RSA_SHA1 extends SignatureMethod
 {
 	public function name() 
 	{

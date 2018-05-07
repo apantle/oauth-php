@@ -1,9 +1,11 @@
 <?php
 
+namespace OAuth1\Body;
+
 /**
  * Create the body for a multipart/form-data message.
  * 
- * @version $Id: OAuthMultipartFormdata.php 6 2008-02-13 12:35:09Z marcw@pobox.com $
+ * @version $Id: OAuth1\Body\MultipartFormdata.php 6 2008-02-13 12:35:09Z marcw@pobox.com $
  * @author Marc Worrell <marcw@pobox.com>
  * @date  Jan 31, 2008 12:50:05 PM
  * 
@@ -31,7 +33,7 @@
  */
 
 
-class OAuthBodyMultipartFormdata
+class MultipartFormdata
 {
     /**
      * Builds the request string.
@@ -58,7 +60,7 @@ class OAuthBodyMultipartFormdata
 			foreach ($params as $name => $value)
 			{
 				$body .= '--'.$boundary."\r\n";
-				$body .= 'Content-Disposition: form-data; name="'.OAuthBodyMultipartFormdata::encodeParameterName(rawurldecode($name)).'"';
+				$body .= 'Content-Disposition: form-data; name="'.MultipartFormdata::encodeParameterName(rawurldecode($name)).'"';
 				$body .= "\r\n\r\n";
 				$body .= urldecode($value);
 				$body .= "\r\n";
@@ -106,7 +108,7 @@ class OAuthBodyMultipartFormdata
 					}
 					$mime  = !empty($f['mime']) ? $f['mime'] : 'application/octet-stream';
 					$body .= '--'.$boundary."\r\n";
-					$body .= 'Content-Disposition: form-data; name="'.OAuthBodyMultipartFormdata::encodeParameterName($name).'"; filename="'.OAuthBodyMultipartFormdata::encodeParameterName($filename).'"'."\r\n";
+					$body .= 'Content-Disposition: form-data; name="'.MultipartFormdata::encodeParameterName($name).'"; filename="'.MultipartFormdata::encodeParameterName($filename).'"'."\r\n";
 					$body .= 'Content-Type: '.$mime;
 					$body .= "\r\n\r\n";
 					$body .= $data;

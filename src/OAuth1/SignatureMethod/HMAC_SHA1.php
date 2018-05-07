@@ -1,11 +1,13 @@
 <?php
 
+namespace OAuth1\SignatureMethod;
+
 /**
- * OAuth signature implementation using PLAINTEXT
+ * OAuth signature implementation using HMAC-SHA1
  * 
  * @version $Id$
  * @author Marc Worrell <marcw@pobox.com>
- * @date  Sep 8, 2008 12:09:43 PM
+ * @date  Sep 8, 2008 12:21:19 PM
  * 
  * The MIT License
  * 
@@ -30,19 +32,18 @@
  * THE SOFTWARE.
  */
 
-require_once dirname(__FILE__).'/OAuthSignatureMethod.class.php';
 
-
-class OAuthSignatureMethod_PLAINTEXT extends OAuthSignatureMethod
+class HMAC_SHA1 extends SignatureMethod
 {
 	public function name ()
 	{
-		return 'PLAINTEXT';
+		return 'HMAC-SHA1';
 	}
 
 
 	/**
-	 * Calculate the signature using PLAINTEXT
+	 * Calculate the signature using HMAC-SHA1
+	 * This function is copyright Andy Smith, 2007.
 	 * 
 	 * @param OAuthRequest request
 	 * @param string base_string
@@ -52,7 +53,34 @@ class OAuthSignatureMethod_PLAINTEXT extends OAuthSignatureMethod
 	 */
 	function signature ( $request, $base_string, $consumer_secret, $token_secret )
 	{
-		return $request->urlencode($request->urlencode($consumer_secret).'&'.$request->urlencode($token_secret));
+		$key = $request->urlencode($consumer_secret).'&'.$request->urlencode($token_secret);
+		if (function_exists('hash_hmac'))
+		{
+			$signature = base64_encode(hash_hmac("sha1", $base_string, $key, true));
+		}
+		else
+		{
+		    $blocksize	= 64;
+		    $hashfunc	= 'sha1';
+		    if (strlen($key) > $blocksize)
+		    {
+		        $key = pack('H*', $hashfunc($key));
+		    }
+		    $key	= str_pad($key,$blocksize,chr(0x00));
+		    $ipad	= str_repeat(chr(0x36),$blocksize);
+		    $opad	= str_repeat(chr(0x5c),$blocksize);
+		    $hmac 	= pack(
+		                'H*',$hashfunc(
+		                    ($key^$opad).pack(
+		                        'H*',$hashfunc(
+		                            ($key^$ipad).$base_string
+		                        )
+		                    )
+		                )
+		            );
+			$signature = base64_encode($hmac);
+		}
+		return $request->urlencode($signature);
 	}
 
 
@@ -71,9 +99,15 @@ class OAuthSignatureMethod_PLAINTEXT extends OAuthSignatureMethod
 		$a = $request->urldecode($signature);
 		$b = $request->urldecode($this->signature($request, $base_string, $consumer_secret, $token_secret));
 
-		return $request->urldecode($a) == $request->urldecode($b);
+		// We have to compare the decoded values
+		$valA  = base64_decode($a);
+		$valB  = base64_decode($b);
+
+		// Crude binary comparison
+		return rawurlencode($valA) == rawurlencode($valB);
 	}
 }
+
 
 /* vi:set ts=4 sts=4 sw=4 binary noeol: */
 

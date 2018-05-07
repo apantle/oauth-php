@@ -1,6 +1,9 @@
 <?php
+
+namespace OAuth1\Store;
+
 /**
- * OAuthStorePostgreSQL.php
+ * PostgreSQL.php
  *
  * PHP Version 5.2
  *
@@ -8,7 +11,7 @@
  * @link http://elma.fr
  * 
  * @Id 2010-10-22 10:07:18 ndelanoe $
- * @version $Id: OAuthStorePostgreSQL.php 175 2010-11-24 19:52:24Z brunobg@corollarium.com $
+ * @version $Id: PostgreSQL.php 175 2010-11-24 19:52:24Z brunobg@corollarium.com $
  * 
  * The MIT License
  * 
@@ -33,10 +36,9 @@
  * THE SOFTWARE.
  **/
 
-require_once dirname(__FILE__) . '/OAuthStoreAbstract.class.php';
 
 
-class OAuthStorePostgreSQL extends OAuthStoreAbstract
+class PostgreSQL extends StoreAbstract
 {
     /**
      * Maximum delta a timestamp may be off from a previous timestamp.

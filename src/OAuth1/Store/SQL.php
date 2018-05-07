@@ -1,10 +1,12 @@
 <?php
 
+namespace OAuth1\Store;
+
 /**
  * Storage container for the oauth credentials, both server and consumer side.
  * Based on MySQL
  * 
- * @version $Id: OAuthStoreMySQL.php 76 2010-01-27 19:51:17Z brunobg@corollarium.com $
+ * @version $Id: MySQL.php 76 2010-01-27 19:51:17Z brunobg@corollarium.com $
  * @author Marc Worrell <marcw@pobox.com>
  * @date  Nov 16, 2007 4:03:30 PM
  * 
@@ -33,10 +35,7 @@
  */
 
 
-require_once dirname(__FILE__) . '/OAuthStoreAbstract.class.php';
-
-
-abstract class OAuthStoreSQL extends OAuthStoreAbstract
+abstract class SQL extends StoreAbstract
 {
 	/**
 	 * Maximum delta a timestamp may be off from a previous timestamp.

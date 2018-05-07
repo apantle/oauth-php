@@ -1,5 +1,7 @@
 <?php
 
+namespace OAuth1\Body;
+
 /**
  * Add the extra headers for a PUT or POST request with a file.
  * 
@@ -29,7 +31,7 @@
  * THE SOFTWARE.
  */
 
-class OAuthBodyContentDisposition
+class ContentDisposition
 {
     /**
      * Builds the request string.
@@ -90,7 +92,7 @@ class OAuthBodyContentDisposition
 					}
 					$mime  = !empty($f['mime']) ? $f['mime'] : 'application/octet-stream';
 					
-					$headers['Content-Disposition'] = 'attachment; filename="'.OAuthBodyContentDisposition::encodeParameterName($filename).'"';
+					$headers['Content-Disposition'] = 'attachment; filename="'.ContentDisposition::encodeParameterName($filename).'"';
 					$headers['Content-Type']		= $mime;
 
 					$body = $data;

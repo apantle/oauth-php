@@ -1,5 +1,7 @@
 <?php
 
+namespace OAuth1\Session;
+
 /**
  * Abstract base class for OAuthStore implementations
  * 
@@ -35,7 +37,7 @@
  * a SQL, Memcache or other implementation.
  *
  */
-abstract class OAuthSessionAbstract
+abstract class SessionAbstract
 {
 	abstract public function get ( $key );
 	abstract public function set ( $key, $data );

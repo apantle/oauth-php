@@ -1,5 +1,7 @@
 <?php
 
+namespace OAuth1\Store;
+
 /**
  * Abstract base class for OAuthStore implementations
  * 
@@ -29,7 +31,7 @@
  * THE SOFTWARE.
  */
 
-abstract class OAuthStoreAbstract
+abstract class StoreAbstract
 {
 	abstract public function getSecretsForVerify ( $consumer_key, $token, $token_type = 'access' );
 	abstract public function getSecretsForSignature ( $uri, $user_id );

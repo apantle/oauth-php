@@ -1,10 +1,14 @@
 <?php
 
+namespace OAuth1\Store;
+
+use PDO as PDOConnection;
+
 /**
  * Storage container for the oauth credentials, both server and consumer side.
  * Based on MySQL
  * 
- * @version $Id: OAuthStorePDO.php 64 2009-08-16 19:37:00Z marcw@pobox.com $
+ * @version $Id: PDO.php 64 2009-08-16 19:37:00Z marcw@pobox.com $
  * @author Bruno Barberi Gnecco <brunobg@users.sf.net> Based on code by Marc Worrell <marcw@pobox.com>
  * 
  * 
@@ -31,10 +35,7 @@
  * THE SOFTWARE.
  */
 
-require_once dirname(__FILE__) . '/OAuthStoreSQL.php';
-
-
-class OAuthStorePDO extends OAuthStoreSQL
+class PDO extends SQL
 {
 	private $conn; // PDO connection
 	private $lastaffectedrows;
@@ -57,7 +58,7 @@ class OAuthStorePDO extends OAuthStoreSQL
 		{
 			try 
 			{
-				$this->conn = new PDO($options['dsn'], $options['username'], @$options['password']);
+				$this->conn = new PDOConnection($options['dsn'], $options['username'], @$options['password']);
 			}
 			catch (PDOException $e) 
 			{
@@ -107,7 +108,7 @@ class OAuthStorePDO extends OAuthStoreSQL
 		{
 			$stmt = $this->conn->query($sql);
 			
-			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			$result = $stmt->fetchAll(PDOConnection::FETCH_ASSOC);
 		}
 		catch (PDOException $e) 
 		{
@@ -145,7 +146,7 @@ class OAuthStorePDO extends OAuthStoreSQL
 		$sql = $this->sql_printf(func_get_args());
 		try 
 		{
-			$all = $this->conn->query($sql, PDO::FETCH_NUM);
+			$all = $this->conn->query($sql, PDOConnection::FETCH_NUM);
 			$row = array();
 			foreach ($all as $r) {
 				$row = $r;
@@ -251,7 +252,7 @@ class OAuthStorePDO extends OAuthStoreSQL
 	
 	protected function sql_errcheck ( $sql )
 	{
-		$msg =  "SQL Error in OAuthStoreMySQL: ". print_r($this->conn->errorInfo(), true) ."\n\n" . $sql;
+		$msg =  "SQL Error: ". print_r($this->conn->errorInfo(), true) ."\n\n" . $sql;
 		$backtrace = debug_backtrace();
 		$msg .=  "\n\nAt file " . $backtrace[1]['file'] . ", line "  . $backtrace[1]['line']; 
 		throw new OAuthException2($msg);

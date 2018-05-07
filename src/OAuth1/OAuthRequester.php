@@ -31,7 +31,8 @@
  */
 
 require_once dirname(__FILE__) . '/OAuthRequestSigner.php';
-require_once dirname(__FILE__) . '/body/OAuthBodyContentDisposition.php';
+
+use OAuth1\Body\ContentDisposition;
 
 namespace OAuth1;
 
@@ -106,7 +107,7 @@ class OAuthRequester extends OAuthRequestSigner
 		{
 			// At the moment OAuth does not support multipart/form-data, so try to encode
 			// the supplied file (or data) as the request body and add a content-disposition header.
-			list($extra_headers, $body) = OAuthBodyContentDisposition::encodeBody($this->files);
+			list($extra_headers, $body) = ContentDisposition::encodeBody($this->files);
 			$this->setBody($body);
 			$curl_options = $this->prepareCurlOptions($curl_options, $extra_headers);
 		}

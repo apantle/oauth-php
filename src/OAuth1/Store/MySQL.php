@@ -1,11 +1,16 @@
 <?php
 
+namespace OAuth1\Store;
+
+use Exception;
+
 /**
  * Storage container for the oauth credentials, both server and consumer side.
  * Based on MySQL
  * 
- * @version $Id: OAuthStoreMySQLi.php 64 2009-08-16 19:37:00Z marcw@pobox.com $
- * @author Bruno Barberi Gnecco <brunobg@users.sf.net> Based on code by Marc Worrell <marcw@pobox.com>
+ * @version $Id: MySQL.php 85 2010-02-19 14:56:40Z brunobg@corollarium.com $
+ * @author Marc Worrell <marcw@pobox.com>
+ * @date  Nov 16, 2007 4:03:30 PM
  * 
  * 
  * The MIT License
@@ -31,82 +36,24 @@
  * THE SOFTWARE.
  */
 
-/*
- * Modified from OAuthStoreMySQL to support MySQLi
- */
-
-require_once dirname(__FILE__) . '/OAuthStoreMySQL.php';
-
-
-class OAuthStoreMySQLi extends OAuthStoreMySQL
+class MySQL extends SQL
 {
-	
-	public function install() {
-		$sql = file_get_contents(dirname(__FILE__) . '/mysql/mysql.sql');
-		$ps  = explode('#--SPLIT--', $sql);
-		
-		foreach ($ps as $p)
-		{
-			$p = preg_replace('/^\s*#.*$/m', '', $p);
-			
-			$this->query($p);
-			$this->sql_errcheck($p);
-		}		
-	}
+	/**
+	 * The MySQL connection 
+	 */
+	protected $conn;
 
 	/**
-	 * Construct the OAuthStoreMySQLi.
-	 * In the options you have to supply either:
-	 * - server, username, password and database (for a mysqli_connect)
-	 * - conn (for the connection to be used)
-	 * 
-	 * @param array options
+	 * Initialise the database
 	 */
-	function __construct ( $options = array() )
+	public function install ()
 	{
-		if (isset($options['conn']))
-		{
-			$this->conn = $options['conn'];
-		}
-		else
-		{
-			if (isset($options['server']))
-			{
-				$server   = $options['server'];
-				$username = $options['username'];
-				
-				if (isset($options['password']))
-				{
-					$this->conn = ($GLOBALS["___mysqli_ston"] = mysqli_connect($server,  $username,  $options['password']));
-				}
-				else
-				{
-					$this->conn = ($GLOBALS["___mysqli_ston"] = mysqli_connect($server,  $username));
-				}
-			}
-			else
-			{
-				// Try the default mysql connect
-				$this->conn = ($GLOBALS["___mysqli_ston"] = mysqli_connect());
-			}
-
-			if ($this->conn === false)
-			{
-				throw new OAuthException2('Could not connect to MySQL database: ' . ((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)));
-			}
-
-			if (isset($options['database']))
-			{
-				/* TODO: security. mysqli_ doesn't seem to have an escape identifier function.
-				$escapeddb = mysqli_real_escape_string($options['database']);
-				if (!((bool)mysqli_query( $this->conn, "USE `$escapeddb`" )))
-				{
-					$this->sql_errcheck();
-				}*/
-			}
-			$this->query('set character set utf8');
-		}
+	    // todo: check if this is used, otherwise remove
+	    throw new Exception('ewww, don\'t use this');
 	}
+	
+	
+	/* ** Some simple helper functions for querying the mysql db ** */
 
 	/**
 	 * Perform a query, ignore the results
@@ -117,13 +64,13 @@ class OAuthStoreMySQLi extends OAuthStoreMySQL
 	protected function query ( $sql )
 	{
 		$sql = $this->sql_printf(func_get_args());
-		if (!($res = mysqli_query( $this->conn, $sql)))
+		if (!($res = mysql_query($sql, $this->conn)))
 		{
 			$this->sql_errcheck($sql);
 		}
-		if (!is_bool($res))
+		if (is_resource($res))
 		{
-			((mysqli_free_result($res) || (is_object($res) && (get_class($res) == "mysqli_result"))) ? true : false);
+			mysql_free_result($res);
 		}
 	}
 	
@@ -138,16 +85,16 @@ class OAuthStoreMySQLi extends OAuthStoreMySQL
 	protected function query_all_assoc ( $sql )
 	{
 		$sql = $this->sql_printf(func_get_args());
-		if (!($res = mysqli_query( $this->conn, $sql)))
+		if (!($res = mysql_query($sql, $this->conn)))
 		{
 			$this->sql_errcheck($sql);
 		}
 		$rs = array();
-		while ($row  = mysqli_fetch_assoc($res))
+		while ($row  = mysql_fetch_assoc($res))
 		{
 			$rs[] = $row;
 		}
-		((mysqli_free_result($res) || (is_object($res) && (get_class($res) == "mysqli_result"))) ? true : false);
+		mysql_free_result($res);
 		return $rs;
 	}
 	
@@ -162,11 +109,11 @@ class OAuthStoreMySQLi extends OAuthStoreMySQL
 	protected function query_row_assoc ( $sql )
 	{
 		$sql = $this->sql_printf(func_get_args());
-		if (!($res = mysqli_query( $this->conn, $sql)))
+		if (!($res = mysql_query($sql, $this->conn)))
 		{
 			$this->sql_errcheck($sql);
 		}
-		if ($row = mysqli_fetch_assoc($res))
+		if ($row = mysql_fetch_assoc($res))
 		{
 			$rs = $row;
 		}
@@ -174,7 +121,7 @@ class OAuthStoreMySQLi extends OAuthStoreMySQL
 		{
 			$rs = false;
 		}
-		((mysqli_free_result($res) || (is_object($res) && (get_class($res) == "mysqli_result"))) ? true : false);
+		mysql_free_result($res);
 		return $rs;
 	}
 
@@ -189,11 +136,11 @@ class OAuthStoreMySQLi extends OAuthStoreMySQL
 	protected function query_row ( $sql )
 	{
 		$sql = $this->sql_printf(func_get_args());
-		if (!($res = mysqli_query( $this->conn, $sql)))
+		if (!($res = mysql_query($sql, $this->conn)))
 		{
 			$this->sql_errcheck($sql);
 		}
-		if ($row = mysqli_fetch_array($res))
+		if ($row = mysql_fetch_array($res))
 		{
 			$rs = $row;
 		}
@@ -201,7 +148,7 @@ class OAuthStoreMySQLi extends OAuthStoreMySQL
 		{
 			$rs = false;
 		}
-		((mysqli_free_result($res) || (is_object($res) && (get_class($res) == "mysqli_result"))) ? true : false);
+		mysql_free_result($res);
 		return $rs;
 	}
 	
@@ -216,19 +163,12 @@ class OAuthStoreMySQLi extends OAuthStoreMySQL
 	protected function query_one ( $sql )
 	{
 		$sql = $this->sql_printf(func_get_args());
-		if (!($res = mysqli_query( $this->conn, $sql)))
+		if (!($res = mysql_query($sql, $this->conn)))
 		{
 			$this->sql_errcheck($sql);
 		}
-		if ($row = mysqli_fetch_assoc($res))
-		{
-			$val = array_pop($row);
-		}
-		else
-		{
-			$val = false;
-		}
-		((mysqli_free_result($res) || (is_object($res) && (get_class($res) == "mysqli_result"))) ? true : false);
+		$val = @mysql_result($res, 0, 0);
+		mysql_free_result($res);
 		return $val;
 	}
 	
@@ -238,7 +178,7 @@ class OAuthStoreMySQLi extends OAuthStoreMySQL
 	 */
 	protected function query_affected_rows ()
 	{
-		return mysqli_affected_rows($this->conn);
+		return mysql_affected_rows($this->conn);
 	}
 
 
@@ -249,7 +189,7 @@ class OAuthStoreMySQLi extends OAuthStoreMySQL
 	 */
 	protected function query_insert_id ()
 	{
-		return ((is_null($___mysqli_res = mysqli_insert_id($this->conn))) ? false : $___mysqli_res);
+		return mysql_insert_id($this->conn);
 	}
 	
 	
@@ -269,7 +209,7 @@ class OAuthStoreMySQLi extends OAuthStoreMySQL
 	{
 		if (is_string($s))
 		{
-			return mysqli_real_escape_string( $this->conn, $s);
+			return mysql_real_escape_string($s, $this->conn);
 		}
 		else if (is_null($s))
 		{
@@ -285,16 +225,16 @@ class OAuthStoreMySQLi extends OAuthStoreMySQL
 		}
 		else
 		{
-			return mysqli_real_escape_string( $this->conn, strval($s));
+			return mysql_real_escape_string(strval($s), $this->conn);
 		}
 	}
 	
 	
 	protected function sql_errcheck ( $sql )
 	{
-		if (((is_object($this->conn)) ? mysqli_errno($this->conn) : (($___mysqli_res = mysqli_connect_errno()) ? $___mysqli_res : false)))
+		if (mysql_errno($this->conn))
 		{
-			$msg =  "SQL Error in OAuthStoreMySQL: ".((is_object($this->conn)) ? mysqli_error($this->conn) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false))."\n\n" . $sql;
+			$msg =  "SQL Error in OAuthStoreMySQL: ".mysql_error($this->conn)."\n\n" . $sql;
 			throw new OAuthException2($msg);
 		}
 	}
