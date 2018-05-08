@@ -45,10 +45,23 @@ class OAuthStore
     {
         if (!OAuthStore::$instance) {
             // Select the store you want to use
-            $class = '\\OAuth1\\Store\\' . $store;
+            // if we start with a '\' it is probably a full namespaced class name
+            if (preg_match(":^\\:", $store)) {
+                $class =  $store;
+            }
+            else {
+                $class = '\\OAuth1\\Store\\' . $store;
+            }
 
             if (class_exists($class)) {
-                OAuthStore::$instance = new $class($options);
+                $storeClass = new $class($options);
+
+                // does the class extends StoreAbstract
+                if (!is_subclass_of($storeClass, '\\OAuth1\\Store\\StoreAbstract')) {
+                    throw new OAuthException2("$class is no a valid OAuthStore");
+                }
+                OAuthStore::$instance = $storeClass;
+
             } else {
                 throw new OAuthException2('No OAuthStore for ' . $store );
             }
